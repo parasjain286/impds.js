@@ -47,12 +47,13 @@ function getFreshJSESSIONID(maxRetries = 5, retryDelay = 3000) {
       pythonProcess.on('close', (code) => {
 
       const jsessionMatch = stdout.match(/JSESSIONID:\s*([A-Za-z0-9]+)/);
-        if (jsessionMatch && jsessionMatch[1]) {
-          currentJSESSIONID = jsessionMatch[1];
-          sessionLastUpdated = new Date();
-          console.log(`✅ New JSESSIONID obtained: ${currentJSESSIONID}`);
-          resolve(currentJSESSIONID);
-          return;
+        if (/^[A-Za-z0-9]+$/.test(sessionId) && sessionId.length >= 16) {
+             currentJSESSIONID = sessionId;
+              sessionLastUpdated = new Date();
+               console.log(`✅ JSESSIONID from file: ${currentJSESSIONID}`);
+                 resolve(currentJSESSIONID);
+                     return;
+        }
         }
 
         try {
@@ -300,14 +301,21 @@ app.get('/search-aadhaar', (req, res) => {
 
   const aadhaar = req.query.aadhaar;
 
-  if (!aadhaar) {
-    return res.status(400).json({ 
-      success: false, 
-      error: 'Missing aadhaar parameter' 
-    });
-  }
+if (!aadhaar) {
+  return res.status(400).json({
+    success: false,
+    error: 'Missing aadhaar parameter'
+  });
+}
 
-  console.log(`🔍 Aadhaar search request: search="${search}", aadhaar="${aadhaar.substring(0, 10)}..."`);
+if (!/^\d{12}$/.test(aadhaar)) {
+  return res.status(400).json({
+    success: false,
+    error: 'Invalid aadhaar format'
+  });
+}
+
+console.log(`🔍 Aadhaar search request: search="${search}", aadhaar="${aadhaar.substring(0, 10)}..."`);
 
   let encryptedAadhaar;
   try {
