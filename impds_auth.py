@@ -5,7 +5,8 @@ from bs4 import BeautifulSoup
 import re  
 import pytesseract  
 from PIL import Image  
-import io  
+import io
+import os
 from flask import Flask
 
 app = Flask(__name__)
