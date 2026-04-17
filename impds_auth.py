@@ -33,7 +33,7 @@ class IMPDSAutomation:
   
     def get_login_page(self):  
         url = f"{self.base_url}/LoginPage"  
-        response = self.session.get(url)  
+       response = self.session.get(url, timeout=20)
         if response.status_code == 200:  
             soup = BeautifulSoup(response.text, 'html.parser')  
             csrf_input = soup.find('input', {'name': 'REQ_CSRF_TOKEN'})  
@@ -53,7 +53,7 @@ class IMPDSAutomation:
   
     def get_captcha(self):  
         url = f"{self.base_url}/ReloadCaptcha"  
-        response = self.session.post(url)  
+      response = self.session.post(url, timeout=20)
         if response.status_code == 200:  
             try:  
                 data = response.json()  
@@ -101,7 +101,11 @@ class IMPDSAutomation:
             'REQ_CSRF_TOKEN': self.csrf_token  
         }  
   
-        response = self.session.post(f"{self.base_url}/UserLogin", data=data)  
+      response = self.session.post(
+    f"{self.base_url}/UserLogin",
+    data=data,
+    timeout=20
+)
   
         if response.status_code == 200:  
             try:  
