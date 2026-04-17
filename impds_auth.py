@@ -6,7 +6,12 @@ import re
 import pytesseract  
 from PIL import Image  
 import io  
-  
+
+from flask import Flask
+application = Flask(__name__)
+@application.route("/")
+def home():
+  return "Service Running"
 class IMPDSAutomation:  
     def __init__(self):  
         self.session = requests.Session()  
