@@ -6,7 +6,7 @@ const fs = require('fs');
 const CryptoJS = require('crypto-js');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const ENCRYPTION_KEY = "nic@impds#dedup05613";
 
@@ -46,7 +46,7 @@ function getFreshJSESSIONID(maxRetries = 5, retryDelay = 3000) {
 
       pythonProcess.on('close', (code) => {
 
-        const jsessionMatch = stdout.match(/JSESSIONID: ([A-F0-9]+)/);
+      const jsessionMatch = stdout.match(/JSESSIONID:\s*([A-Za-z0-9]+)/);
         if (jsessionMatch && jsessionMatch[1]) {
           currentJSESSIONID = jsessionMatch[1];
           sessionLastUpdated = new Date();
@@ -436,7 +436,7 @@ async function initializeServer() {
       console.log('✅ Server initialized with valid session');
       console.log('🔐 Encryption key loaded');
 
-      app.listen(PORT, () => {
+     app.listen(PORT, "0.0.0.0", () => {
         console.log(`🎉 Server running at http://localhost:${PORT}`);
         console.log(`🔑 Current JSESSIONID: ${currentJSESSIONID}`);
         console.log('\nAvailable endpoints:');
@@ -459,5 +459,12 @@ async function initializeServer() {
     }
   }
 }
+
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    error: "Route not found"
+  });
+});
 
 initializeServer();
