@@ -40,16 +40,18 @@ class IMPDSAutomation:
             if csrf_input:  
                 self.csrf_token = csrf_input.get('value')  
                 print(f"[+] CSRF Token: {self.csrf_token}")  
-  for script in soup.find_all('script'):
+
+
+for script in soup.find_all('script'):
     script_text = script.get_text() or ""
     if 'USER_SALT' in script_text:
         match = re.search(r"USER_SALT\s*=\s*'([^']+)'", script_text)
         if match:
             self.user_salt = match.group(1)
             print(f"[+] User Salt: {self.user_salt}")
-            return True  
-        print("[-] Failed to load login page")  
-        return False  
+            return True
+print("[-] Failed to load login page")
+return False
   
     def get_captcha(self):  
         url = f"{self.base_url}/ReloadCaptcha"  
