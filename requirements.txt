@@ -1,5 +1,6 @@
-flask
+Flask
 requests
 gunicorn
 beautifulsoup4
 pytesseract
+Pillow
